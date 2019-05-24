@@ -2,13 +2,21 @@ import "./styles.css";
 import StyledLog from "./StyledLog";
 
 new StyledLog().html`
-  hello my
-  <spacer/><div class="adj">good</div><spacer/>
-  <br>
+  this is a 
+  <spacer/><div class="cool">cool</div><spacer/>
   and
-  <div class="my-adj">special</div>
-  friend!
+  <br>
+  <spacer/><div class="stylized">stylized</div><spacer/>
+  console log
+  <div class="excalamation">!</div>
 `.css`
-  adj { color: yellow; }
-  my-adj { background: yellow; }
+  cool { color: yellow; }
+  stylized { 
+    background: #C06344;
+    padding: 2px 4px;
+    border-radius: 10px;
+  }
+  excalamation {
+    font-size: 2em;
+  }
 `.log();

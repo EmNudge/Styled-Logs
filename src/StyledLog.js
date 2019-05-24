@@ -43,7 +43,7 @@ class StyledLog {
       .map(item => {
         let str = item.trim();
         if (str.indexOf("br") === 0) return "\n";
-        if (str.indexOf("spacer") === 0) return " ";
+        if (str.indexOf("spacer") === 0) return [" ", str.slice(8).trim()];
         if (str.indexOf("div") === 0) {
           str = str.slice(3).trim();
           const name = str.slice(7, str.indexOf('"', 7));
@@ -52,7 +52,8 @@ class StyledLog {
         }
 
         return str.indexOf("/div>") === 0 ? str.slice(5).trim() : str;
-      });
+      })
+      .flatMap(item => item);
   }
 
   // helper function to convert template literal to object
