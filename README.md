@@ -2,6 +2,7 @@
 
 This is a basic library in pre-alpha for styling console logs.
 
+[Play with this on codesandbox.io!](https://codesandbox.io/s/styledconsolelogs-pc4lv)
 
 ## Background
 console.log() allows for basic css styling which uses a syntax similar to:
