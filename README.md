@@ -50,3 +50,5 @@ This library transpiles the pseudo-html and pseudo-css into objects and/or array
 The format is only similar to make creating these stylized logs more intuitive. 
 
 Things like event listeners, pseudo-elements (ironic, I know), IDs, css variables, etc will not work.
+
+As such, nesting is not yet supported. Not from the stylesheet nor the DOM.
