@@ -1,0 +1,10 @@
+body {
+  font-family: sans-serif;
+}
+
+main {
+  box-shadow: 2px 2px 5px 0 grey;
+  border-radius: 10px;
+  padding: 5px;
+  text-align: center;
+}
