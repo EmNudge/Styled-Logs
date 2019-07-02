@@ -1,6 +1,6 @@
 # Styled-Logs
 
-This is a basic library in pre-alpha for styling console logs.
+This is a basic library for styling console logs.
 
 [Play with this on codesandbox.io!](https://codesandbox.io/s/styledconsolelogs-pc4lv)
 
