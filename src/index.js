@@ -21,6 +21,22 @@ new StyledLog().html`
     background: linear-gradient(#E86, #C64);
     padding: 2px 6px;
     border-radius: 0 4px 4px 0;
+  this is a 
+  <spacer/><div class="cool">cool</div><spacer/>
+  and
+  <br>
+  <spacer/><div class="stylized">stylized</div><spacer/>
+  console log
+  <div class="excalamation">!</div>
+`.css`
+  cool { color: yellow; }
+  stylized { 
+    background: #C06344;
+    padding: 2px 4px;
+    border-radius: 10px;
+  }
+  excalamation {
+    font-size: 2em;
   }
 `.log();
 
