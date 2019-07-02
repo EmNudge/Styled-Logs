@@ -7,11 +7,11 @@ This is a basic library in pre-alpha for styling console logs.
 ## Background
 console.log() allows for basic css styling which uses a syntax similar to:
 ```javascript
-console.log('This is a %c styled %c console log%c! ', 'background: #222; color: white; padding: 0 2px;', '', 'font-size: 2em');
+console.log("This is %cstyled-logs%cv0.1.0%c\n\nStyle your %cconsole%clogs%c\nin a familiar way!", "color: white; background: linear-gradient(#555, #333); padding: 2px 6px; border-radius: 4px 0 0 4px;", "color: white; background: linear-gradient(#E86, #C64); padding: 2px 6px; border-radius: 0 4px 4px 0;", "", "color: white; background: linear-gradient(#555, #333); padding: 2px 6px; border-radius: 4px 0 0 4px;", "color: white; background: linear-gradient(#E86, #C64); padding: 2px 6px; border-radius: 0 4px 4px 0;", "");
 ```
 which produces the following:
 
-![stylized console log](https://i.imgur.com/6zSYwpC.png)
+![stylized console log](https://i.imgur.com/vwKcepp.png)
 
 As you can see, while this is a really cool feature, the syntax makes it fairly hard to read and create.
 This miniature library creates a much more familiar syntax for styling complex stylized console logs.
@@ -19,30 +19,33 @@ This miniature library creates a much more familiar syntax for styling complex s
 ## Syntax
 ```javascript
 new StyledLog().html`
-  this is a 
-  <spacer/><div class="cool">cool</div><spacer/>
-  and
-  <br>
-  <spacer/><div class="stylized">stylized</div><spacer/>
-  console log
-  <div class="excalamation">!</div>
+  This is <div class="name">styled-logs</div>
+  <div class="version">v0.1.0</div>
+  <br />
+  <br />
+  Style your <div class="name">console</div>
+  <div class="version">logs</div>
+  <br />
+  in a familiar way!
 `.css`
-  cool { color: yellow; }
-  stylized { 
-    background: #C06344;
-    padding: 2px 4px;
-    border-radius: 10px;
+  .name { 
+    color: white;
+    background: linear-gradient(#555, #333);
+    padding: 2px 6px;
+    border-radius: 4px 0 0 4px;
   }
-  excalamation {
-    font-size: 2em;
+  .version {
+    color: white;
+    background: linear-gradient(#E86, #C64);
+    padding: 2px 6px;
+    border-radius: 0 4px 4px 0;
   }
 `.log();
 ```
-Which produces
-
-![stylized console log with library](https://i.imgur.com/QddBUM1.png)
 
 .html() and .css() can be chained or kept separately. They can also be called multiple times to change either html or css data.
+
+The `StyleLog` class also includes an `alias` object. This matches up self-closing tags with particular texts. By default it is set to `{ br: '\n' }`, but it can be mutated to allow for custom self-closing tags.
 
 ## Note
 Console logs have minimal and arbitrary styling options. Most styles will not work. Experiment.
