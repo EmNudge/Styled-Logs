@@ -2,13 +2,14 @@ import "./styles.css";
 import StyledLog from "./StyledLog";
 
 new StyledLog().html`
-  This is Styled Logs!
-  <br />
-  this is the package of:
-  <br />
-  <br />
-  <div class="name">styled-logs</div>
+  This is <div class="name">styled-logs</div>
   <div class="version">v0.1.0</div>
+  <br />
+  <br />
+  Style your <div class="name">console</div>
+  <div class="version">logs</div>
+  <br />
+  in a familiar way!
 `.css`
   .name { 
     color: white;

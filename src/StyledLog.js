@@ -37,15 +37,17 @@ class StyledLog {
 
     // using flatmap to add a spacer, creates list of styles
     const styles = names.flatMap(name => [this.styles[name], ""]);
+
     console.log(this.logStr, ...styles);
   }
 
   // helper function to convert template literal to object
   _getArrFromHTML(...vals) {
+    const fullText = String.raw(vals[0], ...vals.slice(1));
     let str = "";
     let arr = [];
 
-    for (const char of String.raw(vals[0], ...vals.slice(1)).split("")) {
+    for (const [index, char] of fullText.split("").entries()) {
       // if a new HTML tag is coming up, clear string
       if (char === "<" && str.length && !str.includes("<")) {
         arr.push(str.replace(/\n/g, "").trimLeft());
@@ -54,6 +56,11 @@ class StyledLog {
       }
 
       str += char;
+
+      // if we've reached the end
+      if (index === fullText.length - 1) {
+        arr.push(str.replace(/\n/g, "").trimLeft());
+      }
 
       // check if current string is an html tag
       const matchHTML = new RegExp("<s*div[^>]*>(.*?)<s*/s*divs*>");
