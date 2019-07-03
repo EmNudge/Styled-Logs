@@ -13,12 +13,6 @@ class StyledLog {
   html(...vals) {
     this.dom = this._getArrFromHTML(...vals);
 
-    this.logStr = this.dom.reduce((log, el) => {
-      if (typeof el === "string") return log + el;
-      if (this.alias[el.tag]) return log + `%c${this.alias[el.tag]}%c`;
-      return log + `%c${el.text}%c`;
-    });
-
     return this;
   }
 
@@ -30,6 +24,12 @@ class StyledLog {
   }
 
   log() {
+    const logStr = this.dom.reduce((log, el) => {
+      if (typeof el === "string") return log + el;
+      if (this.alias[el.tag]) return log + `%c${this.alias[el.tag]}%c`;
+      return log + `%c${el.text}%c`;
+    });
+
     // get names of all special texts in an array
     const names = this.dom
       .filter(el => typeof el === "object")
@@ -38,7 +38,7 @@ class StyledLog {
     // using flatmap to add a spacer, creates list of styles
     const styles = names.flatMap(name => [this.styles[name], ""]);
 
-    console.log(this.logStr, ...styles);
+    console.log(logStr, ...styles);
   }
 
   // helper function to convert template literal to object
