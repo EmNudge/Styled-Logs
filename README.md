@@ -43,9 +43,30 @@ new StyledLog().html`
 `.log();
 ```
 
-.html() and .css() can be chained or kept separately. They can also be called multiple times to change either html or css data.
+.html() and .css() can be chained or kept separately. They are [Tagged Template Literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#Tagged_templates) and they can also be called multiple times to change either html or css data.
 
-The `StyleLog` class also includes an `alias` object. This matches up self-closing tags with particular texts. By default it is set to `{ br: '\n' }`, but it can be mutated to allow for custom self-closing tags.
+
+## Aliases
+The `StyleLog` class also includes an `alias` object. This matches up self-closing tags with particular texts. By default it is set to `{ br: '\n' }`, but it can be mutated to allow for custom and dynamic self-closing tags.
+#### example:
+```javascript
+// setting up our log, using the custom self-closing tag "score"
+const scoreLog = new StyledLog().html`
+  High Score: <score class="score" />!
+`.css`
+  .score {
+    color: red;
+  }
+`;
+
+// setting score's inner text to "45"
+scoreLog.alias.score = 45;
+scoreLog.log();
+
+// setting score's inner text to "512"
+scoreLog.alias.score = 512;
+scoreLog.log();
+```
 
 ## Note
 Console logs have minimal and arbitrary styling options. Most styles will not work. Experiment.

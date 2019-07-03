@@ -1,14 +1,16 @@
-import "./styles.css";
-import StyledLog from "./StyledLog";
+import StyledLog from "./StyledLog.js";
 
+// basic example showcasing function chaining and
+// multi-use classes
 new StyledLog().html`
-  This is Styled Logs!
-  <br />
-  this is the package of:
-  <br />
-  <br />
-  <div class="name">styled-logs</div>
+  This is <div class="name">styled-logs</div>
   <div class="version">v0.1.0</div>
+  <br />
+  <br />
+  Style your <div class="name">console</div>
+  <div class="version">logs</div>
+  <br />
+  in a familiar way!
 `.css`
   .name { 
     color: white;
@@ -21,24 +23,22 @@ new StyledLog().html`
     background: linear-gradient(#E86, #C64);
     padding: 2px 6px;
     border-radius: 0 4px 4px 0;
-  this is a 
-  <spacer/><div class="cool">cool</div><spacer/>
-  and
-  <br>
-  <spacer/><div class="stylized">stylized</div><spacer/>
-  console log
-  <div class="excalamation">!</div>
-`.css`
-  cool { color: yellow; }
-  stylized { 
-    background: #C06344;
-    padding: 2px 4px;
-    border-radius: 10px;
-  }
-  excalamation {
-    font-size: 2em;
   }
 `.log();
+
+// example showcasing custom aliases for dynamic logs
+const scoreLog = new StyledLog().html`
+  High Score: <score class="score" />!
+`.css`
+  .score {
+    color: red;
+  }
+`;
+scoreLog.alias.score = 45;
+scoreLog.log();
+scoreLog.alias.score = 512;
+scoreLog.log();
+
 
 const platform = navigator.platform.toUpperCase();
 const isMac = platform.includes("MAC");
