@@ -1,58 +1,42 @@
 body {
   font-family: sans-serif;
   display: flex;
+  justify-content: center;
   align-items: center;
-  flex-direction: column;
-  max-width: 900px;
+  height: 100vh;
   margin: 0 auto;
 }
 
-header {
-  margin-bottom: 40px;
-  margin-left: 40px;
-  width: 100%;
-}
-header h1 {
-  margin-bottom: 0px;
-}
-header p {
-  margin-top: 5px;
-}
-
 main {
-  box-shadow: 2px 2px 5px 0 grey;
-  border-radius: 10px;
-  padding: 20px;
   min-width: 100px;
-  max-width: 300px;
-  text-align: center;
-
-  animation: shake 3s infinite;
-  transition: 0.25s;
-}
-
-@keyframes shake {
-  0% {
-    transform: rotate(3deg);
-  }
-  50% {
-    transform: rotate(-3deg);
-  }
-  100% {
-    transform: rotate(3deg);
-  }
+  max-width: 800px;
+  font-size: 2em;
 }
 
 main h3 {
-  margin: 0;
-  padding-bottom: 10px;
+  font-size: 0.6em;
+  font-weight: 100;
+  margin-top: -40px;
 }
 
-main .shortcut {
-  font-size: 0.8em;
-  transition: 0.25s;
+main p {
+  box-shadow: 4px 4px grey;
+  padding: 10px 20px;
+  font-family: "Courier New", Courier, monospace;
 }
 
-main:hover .shortcut {
-  font-size: 1em;
+main p .cursor {
+  display: inline-block;
+  background: rgb(59, 59, 59);
+  width: 15px;
+  height: 25px;
+  margin-bottom: -3px;
+  margin-left: -5px;
+  animation: blink 1s steps(1, end) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
 }

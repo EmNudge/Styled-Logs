@@ -1,0 +1,23 @@
+{
+  "name": "styled-logs",
+  "version": "1.0.0",
+  "description": "style your console logs in a familiar way",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EmNudge/Styled-Logs.git"
+  },
+  "author": "EmNudge",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EmNudge/Styled-Logs/issues"
+  },
+  "homepage": "https://github.com/EmNudge/Styled-Logs#readme",
+  "devDependencies": {
+    "rollup-plugin-babel-minify": "^9.0.0",
+    "rollup-plugin-cleanup": "^3.1.1"
+  }
+}

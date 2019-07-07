@@ -1,3 +1,5 @@
+'use strict';
+
 class StyledLog {
   constructor() {
     // object representation of CSS
@@ -7,7 +9,7 @@ class StyledLog {
     // log friendly version of HTML
     this.logStr = "";
     // strings to use for specific tags
-    this.alias = { br: "\n" };
+    this.alias = {br: "\n"};
   }
 
   html(...vals) {
@@ -123,4 +125,4 @@ class StyledLog {
   }
 }
 
-export default StyledLog;
+module.exports = StyledLog;
