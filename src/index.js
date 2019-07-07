@@ -24,6 +24,7 @@ class StyledLog {
   }
 
   log() {
+    console.log(this.dom);
     const logStr = this.dom.reduce((log, el) => {
       if (typeof el === "string") return log + el;
       if (this.alias[el.tag]) return log + `%c${this.alias[el.tag]}%c`;
@@ -31,12 +32,20 @@ class StyledLog {
     });
 
     // get names of all special texts in an array
-    const names = this.dom
-      .filter(el => typeof el === "object")
-      .map(el => el.className);
+    const elements = this.dom.filter(el => typeof el === "object");
 
     // using flatmap to add a spacer, creates list of styles
-    const styles = names.flatMap(name => [this.styles[name], ""]);
+    const styles = elements.flatMap(el => {
+      // adds tag and class styles only if they exist
+      const tagStyles = this.styles[el.tag] ? this.styles[el.tag] : "";
+      const classStyles = this.styles[`.${el.className}`]
+        ? this.styles[`.${el.className}`]
+        : "";
+
+      // since tag styles are first, they will be overwritten by class styles
+      // regardless of their actual order in the CSS
+      return [`${tagStyles};${classStyles}`, ""];
+    });
 
     console.log(logStr, ...styles);
   }
@@ -50,8 +59,15 @@ class StyledLog {
     for (const [index, char] of fullText.split("").entries()) {
       // if a new HTML tag is coming up, clear string
       if (char === "<" && str.length && !str.includes("<")) {
-        arr.push(str.replace(/\n/g, "").trimLeft());
+        // if it's empty, push a space. If note, push the string
+        arr.push(str.trimLeft().length ? str.trimLeft() : " ");
         str = "<";
+        continue;
+      }
+
+      // collapses all newlines and tabs into one space
+      if (char === "\n" || char === "\t") {
+        if (str.slice(-1) !== " ") str += " ";
         continue;
       }
 
@@ -106,17 +122,22 @@ class StyledLog {
   // helper function to convert template literal to object
   _getObjFromCSS(...vals) {
     //String.raw() turns it into a normal string
-    const strArr = String.raw(vals[0], ...vals.slice(1)).split("}");
+    const styles = String.raw(vals[0], ...vals.slice(1)).split("}");
 
     const stylesObj = {};
-    for (const str of strArr) {
-      const keyName = str
-        .slice(0, str.indexOf("{"))
-        .trim()
-        .slice(1);
-      if (!keyName.length) continue;
-      const propStr = str.slice(str.indexOf("{") + 1).trim();
-      stylesObj[keyName] = propStr;
+    for (const style of styles) {
+      // gets all selectors, be they classes or elements, separated by commas
+      const selectors = style
+        .slice(0, style.indexOf("{"))
+        .split(",")
+        .map(selector => selector.trim());
+
+      // doesn't get rid of whitespace since console.log() doesn't care about that
+      const styleBlock = style.slice(style.indexOf("{") + 1);
+
+      for (const selector of selectors) {
+        stylesObj[selector] = styleBlock;
+      }
     }
 
     return stylesObj;

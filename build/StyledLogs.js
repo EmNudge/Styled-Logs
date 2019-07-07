@@ -26,6 +26,7 @@ class StyledLog {
   }
 
   log() {
+    console.log(this.dom);
     const logStr = this.dom.reduce((log, el) => {
       if (typeof el === "string") return log + el;
       if (this.alias[el.tag]) return log + `%c${this.alias[el.tag]}%c`;
@@ -60,8 +61,15 @@ class StyledLog {
     for (const [index, char] of fullText.split("").entries()) {
       // if a new HTML tag is coming up, clear string
       if (char === "<" && str.length && !str.includes("<")) {
-        arr.push(str.replace(/\n/g, "").trimLeft());
+        // if it's empty, push a space. If note, push the string
+        arr.push(str.trimLeft().length ? str.trimLeft() : " ");
         str = "<";
+        continue;
+      }
+
+      // collapses all newlines and tabs into one space
+      if (char === "\n" || char === "\t") {
+        if (str.slice(-1) !== " ") str += " ";
         continue;
       }
 
@@ -127,7 +135,7 @@ class StyledLog {
         .map(selector => selector.trim());
 
       // doesn't get rid of whitespace since console.log() doesn't care about that
-      const styleBlock = style.slice(style.indexOf("{") + 1).trim();
+      const styleBlock = style.slice(style.indexOf("{") + 1);
 
       for (const selector of selectors) {
         stylesObj[selector] = styleBlock;
