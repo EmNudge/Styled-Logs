@@ -67,6 +67,16 @@ class StyledLog {
 
       // collapses all newlines and tabs into one space
       if (char === "\n" || char === "\t" || char === " ") {
+        // if an element was just before this, preserve the space
+        // except if it's a line break tag
+        if (
+          !str.length &&
+          typeof arr[arr.length - 1] === "object" &&
+          arr[arr.length - 1].tag !== "br"
+        ) {
+          arr.push(" ");
+          continue;
+        }
         if (str.slice(-1) !== " ") str += " ";
         continue;
       }
