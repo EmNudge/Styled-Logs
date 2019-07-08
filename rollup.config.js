@@ -15,7 +15,7 @@ export default [
     input: "src/index.js",
     output: {
       file: `${buildFolder}/StyledLogs.min.js`,
-      format: "cjs"
+      format: "esm"
     },
     plugins: [cleanup(), minify()]
   }
