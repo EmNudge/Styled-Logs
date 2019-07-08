@@ -26,7 +26,6 @@ class StyledLog {
   }
 
   log() {
-    console.log(this.dom);
     const logStr = this.dom.reduce((log, el) => {
       if (typeof el === "string") return log + el;
       if (this.alias[el.tag]) return log + `%c${this.alias[el.tag]}%c`;
@@ -61,14 +60,13 @@ class StyledLog {
     for (const [index, char] of fullText.split("").entries()) {
       // if a new HTML tag is coming up, clear string
       if (char === "<" && str.length && !str.includes("<")) {
-        // if it's empty, push a space. If note, push the string
-        arr.push(str.trimLeft().length ? str.trimLeft() : " ");
+        arr.push(str.trimLeft());
         str = "<";
         continue;
       }
 
       // collapses all newlines and tabs into one space
-      if (char === "\n" || char === "\t") {
+      if (char === "\n" || char === "\t" || char === " ") {
         if (str.slice(-1) !== " ") str += " ";
         continue;
       }
@@ -76,12 +74,13 @@ class StyledLog {
       str += char;
 
       // if we've reached the end
-      if (index === fullText.length - 1) {
-        arr.push(str.replace(/\n/g, "").trimLeft());
+      if (index >= fullText.length - 2) {
+        arr.push(str.trim());
+        continue;
       }
 
       // check if current string is an html tag
-      const matchHTML = new RegExp("<s*div[^>]*>(.*?)<s*/s*divs*>");
+      const matchHTML = new RegExp("<.+.*</.+>");
       const matchSelfClosing = new RegExp("<s*.+s*/s*>");
       const isFullTag = str.search(matchHTML) > -1;
       const isSelfClosingTag = str.search(matchSelfClosing) > -1;
