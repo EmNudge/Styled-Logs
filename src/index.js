@@ -81,8 +81,8 @@ class StyledLog {
 
       str += char;
 
-      // if we've reached the end
-      if (index >= fullText.length - 2) {
+      // if we've reached the end and it's just a normal string
+      if (index >= fullText.length - 2 && char !== ">") {
         arr.push(str.trim());
         continue;
       }
