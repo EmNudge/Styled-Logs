@@ -11,6 +11,7 @@ class StyledLog {
   }
 
   html(...vals) {
+    // turn template literal into traversable array
     this.dom = this._getArrFromHTML(...vals);
 
     return this;
@@ -51,7 +52,7 @@ class StyledLog {
 
   // helper function to convert template literal to object
   _getArrFromHTML(...vals) {
-    const fullText = String.raw(vals[0], ...vals.slice(1));
+    const fullText = String.raw(...vals);
     let str = "";
     let arr = [];
 
@@ -131,7 +132,7 @@ class StyledLog {
   // helper function to convert template literal to object
   _getObjFromCSS(...vals) {
     //String.raw() turns it into a normal string
-    const styles = String.raw(vals[0], ...vals.slice(1)).split("}");
+    const styles = String.raw(...vals).split("}");
 
     const stylesObj = {};
     for (const style of styles) {
