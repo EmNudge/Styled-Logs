@@ -69,6 +69,10 @@ new StyledLog().html`
 
 .html() and .css() can be chained or kept separately. They are [Tagged Template Literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#Tagged_templates) and they can also be called multiple times to change either html or css data.
 
+### Syntax Highlighting
+
+As a side note, you may find it hard to read html/css without syntax highlighting. As these are tagged template literals, we can take advantage of some VS Code extensions meant for other frameworks. [es6-string-css](https://marketplace.visualstudio.com/items?itemName=bashmish.es6-string-css) can highlight the css for us and [lit-html](https://marketplace.visualstudio.com/items?itemName=bierner.lit-html) can highlight the html for us.
+
 ## Aliases
 
 The `StyleLog` class also includes an `alias` object. This matches up self-closing tags with particular texts. By default it is set to `{ br: '\n' }`, but it can be mutated to allow for custom and dynamic self-closing tags.
