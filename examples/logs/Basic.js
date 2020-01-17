@@ -1,4 +1,4 @@
-import StyledLog from "../build/StyledLogs.min.js";
+import StyledLog from "../../build/StyledLogs.min.js";
 
 new StyledLog().html`
   This is a <div class="styled">styled console log</div>

@@ -1,4 +1,4 @@
-import StyledLog from "../build/StyledLogs.min.js";
+import StyledLog from "../../build/StyledLogs.min.js";
 
 // example showcasing custom aliases for dynamic logs
 const scoreLog = new StyledLog().html`
