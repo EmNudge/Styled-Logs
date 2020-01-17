@@ -79,7 +79,7 @@ class StyledLog {
 			const char = chars[i];
 
 			// if a new HTML tag is coming up, clear string
-			if (char === '<' && str.length && !str.includes('<')) {
+			if (chars[i - 1] !== '\\' && char === '<' && str.length && (!str.startsWith('<') || str.includes('</'))) {
 				arr.push(str.trimLeft());
 				str = '<';
 				continue;
