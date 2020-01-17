@@ -1,6 +1,6 @@
 interface Tag {
 	text: string;
-	className: string;
+	classNames: string[];
 	tag: string;
 }
 
@@ -57,7 +57,7 @@ class StyledLog {
 		const styles: string[] = [];
 		for (const el of elements) {
 			const tagStyles = this.styles[el.tag];
-			const classStyles = this.styles[`.${el.className}`];
+			const classStyles = el.classNames.map(name => this.styles[`.${name}`] || '').join(';')
 
 			// since tag styles are first, they will be overwritten by class styles
 			// regardless of their actual order in the CSS
@@ -113,30 +113,34 @@ class StyledLog {
 			const isFullTag = str.search(matchHTML) > -1;
 			const isSelfClosingTag = str.search(matchSelfClosing) > -1;
 
-			if (isFullTag || isSelfClosingTag) {
-				// get the class
-				const matchClass = new RegExp('class=".*"');
-				const className = str.match(matchClass) ? str.match(matchClass)[0].slice(7, -1) : '';
+			if (!isFullTag && !isSelfClosingTag) continue;
 
-				// get the tag
-				const matchTag = new RegExp('<s*.*?(?=/| )');
-				const untilAndIncludingTag = str.match(matchTag)[0];
-				const tag = untilAndIncludingTag.slice(
-					untilAndIncludingTag.includes(' ') ? untilAndIncludingTag.lastIndexOf(' ') + 1 : 1
-				);
-
-				// get the text
-				const matchText = new RegExp('>.*<');
-				const text = str.match(matchText) ? str.match(matchText)[0].slice(1, -1) : '';
-
-				arr.push({
-					text,
-					className,
-					tag
-				});
-
-				str = '';
+			// get the classes
+			let classNames: string[] = [];
+			const matchClass = new RegExp('class=".*"');
+			const classMatch = str.match(matchClass)
+			if (classMatch) {
+				classNames = classMatch[0].match(/\w+/g).slice(1)
 			}
+
+			// get the tag
+			const matchTag = new RegExp('<s*.*?(?=/| )');
+			const untilAndIncludingTag = str.match(matchTag)[0];
+			const tag = untilAndIncludingTag.slice(
+				untilAndIncludingTag.includes(' ') ? untilAndIncludingTag.lastIndexOf(' ') + 1 : 1
+			);
+
+			// get the text
+			const matchText = new RegExp('>.*<');
+			const text = str.match(matchText) ? str.match(matchText)[0].slice(1, -1) : '';
+
+			arr.push({
+				text,
+				classNames,
+				tag
+			});
+
+			str = '';
 		}
 
 		return arr;
