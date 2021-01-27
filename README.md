@@ -75,7 +75,7 @@ As a side note, you may find it hard to read html/css without syntax highlightin
 
 ## Aliases
 
-The `StyleLog` class also includes an `alias` object. This matches up self-closing tags with particular texts. By default it is set to `{ br: '\n' }`, but it can be mutated to allow for custom and dynamic self-closing tags.
+The `StyleLog` class also includes an `aliases` object. This matches up self-closing tags with particular texts. By default it is set to `{ br: '\n' }`, but it can be mutated to allow for custom and dynamic self-closing tags.
 
 #### example:
 
@@ -90,11 +90,11 @@ const scoreLog = new StyledLog().html`
 `;
 
 // setting score's inner text to "45"
-scoreLog.alias.score = 45;
+scoreLog.aliases.score = 45;
 scoreLog.log();
 
 // setting score's inner text to "512"
-scoreLog.alias.score = 512;
+scoreLog.aliases.score = 512;
 scoreLog.log();
 ```
 
@@ -105,7 +105,7 @@ const scoreLog = new StyledLog().html`
 `;
 
 let scoreNum = 10;
-scoreLog.alias.score = ({ multiplier }) => 
+scoreLog.aliases.score = ({ multiplier }) => 
   scoreNum * Number(multiplier);
 
 scoreLog.log(); // Scores: 10, 20
