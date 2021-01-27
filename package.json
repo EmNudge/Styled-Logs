@@ -1,6 +1,6 @@
 {
   "name": "styled-logs",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "style your console logs in a familiar way",
   "main": "src/index.js",
   "scripts": {
@@ -20,7 +20,7 @@
     "@rollup/plugin-typescript": "^2.1.0",
     "rollup-plugin-babel-minify": "^9.0.0",
     "rollup-plugin-cleanup": "^3.1.1",
-    "tslib": "^1.10.0",
-    "typescript": "^3.7.5"
+    "tslib": "^1.14.1",
+    "typescript": "^3.9.7"
   }
 }

@@ -67,7 +67,7 @@ new StyledLog().html`
 `.log();
 ```
 
-.html() and .css() can be chained or kept separately. They are [Tagged Template Literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#Tagged_templates) and they can also be called multiple times to change either html or css data.
+`.html()` and `.css()` can be chained or kept separately. They are [Tagged Template Literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals#Tagged_templates) and they can also be called multiple times to change either html or css data.
 
 ### Syntax Highlighting
 
@@ -98,6 +98,22 @@ scoreLog.alias.score = 512;
 scoreLog.log();
 ```
 
+If we set an alias to be a function, we can take in properties as input.
+```javascript
+const scoreLog = new StyledLog().html`
+  Scores: <score multiplier="1" />, <score multiplier="2" />
+`;
+
+let scoreNum = 10;
+scoreLog.alias.score = ({ multiplier }) => 
+  scoreNum * Number(multiplier);
+
+scoreLog.log(); // Scores: 10, 20
+
+scoreNum = 75;
+scoreLog.log(); // Scores: 75, 150
+```
+
 ## Note
 
 Console logs have minimal and arbitrary styling options. Most styles will not work. Experiment.
@@ -106,4 +122,9 @@ The format is only similar to make creating these stylized logs more intuitive.
 
 Things like event listeners, pseudo-elements (ironic, I know), IDs, css variables, etc will not work.
 
-As such, nesting is not yet supported. Not from the stylesheet nor the DOM.
+#### Syntax Not Supported
+- `id`s (`#` selector)
+- nesting (not in stylesheet nor html)
+- glob or sibling css selectors (`*`, `~`, `+`)
+- unclosed `p` tags
+- default styling (`div`s do not have `display: block`)

@@ -1,168 +1,75 @@
-interface Tag {
-	text: string;
-	classNames: string[];
-	tag: string;
-}
+import { parseHtml, parseCss } from './parser';
+import type { HtmlNode, CssBlock } from './parser';
 
 class StyledLog {
-	// object representation of CSS
-	styles = {};
-	// array representation of HTML
-	dom: (Tag | string)[] = [];
+	styles: CssBlock[] = [];
+	dom: HtmlNode[] = [];
 	// log friendly version of HTML
 	logStr: string = '';
 	// strings to use for specific tags
-	alias: object = { br: '\n' };
+	aliases: object = { br: '\n' };
 
 	html(template: TemplateStringsArray, ...substitutions: any[]): StyledLog {
 		const regString = String.raw(template, ...substitutions);
-		this.dom = this.getArrFromHTML(regString);
+		this.dom = parseHtml(regString);
 
 		return this;
 	}
 
 	css(template: TemplateStringsArray, ...substitutions: any[]): StyledLog {
 		const regString = String.raw(template, ...substitutions);
-
-		// turn template literal into traversable object
-		this.styles = this.getObjFromCSS(regString);
+		this.styles = parseCss(regString);
 
 		return this;
 	}
 
-	log(): void {
-		const logStrs: string[] = [];
-		const elements: Tag[] = [];
-
-		for (const el of this.dom) {
-			if (typeof el === 'string') {
-				logStrs.push(el);
+	getLog() {
+		const logStrings = [];
+		const elements = [];
+		for (const block of this.dom) {
+			if (block.type === 'TEXT') {
+				logStrings.push(block.content);
 				continue;
 			}
-
-			// add any non-string elements to he array
-			elements.push(el);
-
-			// add the alias instead, if this is an alias tag
-			const tagAlias = this.alias[el.tag];
-			if (tagAlias) {
-				logStrs.push(`%c${tagAlias}%c`);
+			
+			// this is a tag
+			const { attributes, name } = block.content;
+			const className = attributes.class || attributes.className;
+			elements.push({name, className: className ? `.${className}` : null });
+			
+			if (block.type === 'SELF_CLOSING_TAG') {
+				const alias = this.aliases[name];
+				const str = typeof alias === 'function' ? alias(attributes) : attributes;
+				logStrings.push(`%c${str}%c`);
 				continue;
 			}
-
-			// if it's a regular tag
-			logStrs.push(`%c${el.text}%c`);
+			
+			const { content } = block.content;
+			logStrings.push(`%c${content}%c`);
 		}
-
-		const styles: string[] = [];
-		for (const el of elements) {
-			const tagStyles = this.styles[el.tag];
-			const classStyles = el.classNames.map(name => this.styles[`.${name}`] || '').join(';')
-
-			// since tag styles are first, they will be overwritten by class styles
-			// regardless of their actual order in the CSS
-			styles.push(`${tagStyles || ''};${classStyles || ''}`);
-
-			// adds a spacer for styles
-			styles.push('');
-		}
-
-		console.log(logStrs.join(''), ...styles);
-	}
-
-	private getArrFromHTML(fullText: string): (Tag | string)[] {
-		let str: string = '';
-		let arr: (Tag | string)[] = [];
-
-		const chars: string[] = fullText.split('');
-		for (let i = 0; i < chars.length; i++) {
-			const char = chars[i];
-
-			// if a new HTML tag is coming up, clear string
-			if (chars[i - 1] !== '\\' && char === '<' && str.length && (!str.startsWith('<') || str.includes('</'))) {
-				arr.push(str.trimLeft());
-				str = '<';
-				continue;
-			}
-
-			// collapses all newlines and tabs into one space
-			if (char === '\n' || char === '\t' || char === ' ') {
-				// if an element was just before this, preserve the space
-				// except if it's a line break tag
-				const lastEl = arr[arr.length - 1];
-
-				if (!str.length && typeof lastEl === 'object' && (lastEl as Tag).tag !== 'br') {
-					arr.push(' ');
-					continue;
+		
+		const styles = [];
+			for (const { name, className } of elements) {
+				const tagStyles = new Map();
+				for (const { names, rules } of this.styles) {
+					// check if css block matches current element
+					const permutations = [name, className, name+className];
+					if (!names.some(blockName => permutations.includes(blockName))) continue;
+					
+					for (const [name, value] of rules) {
+						tagStyles.set(name, value);
+					}
 				}
-				if (str.slice(-1) !== ' ') str += ' ';
-				continue;
+				
+				const styleStr = [...tagStyles].map(([key, value]) => `${key}:${value}`).join(';');
+				styles.push(styleStr, '');
 			}
-
-			str += char;
-
-			// if we've reached the end and it's just a normal string
-			if (i >= fullText.length - 2 && char !== '>') {
-				arr.push(str.trim());
-				continue;
-			}
-
-			// check if current string is an html tag
-			const matchHTML = new RegExp('<.+.*</.+>');
-			const matchSelfClosing = new RegExp('<s*.+s*/s*>');
-			const isFullTag = str.search(matchHTML) > -1;
-			const isSelfClosingTag = str.search(matchSelfClosing) > -1;
-
-			if (!isFullTag && !isSelfClosingTag) continue;
-
-			// get the classes
-			let classNames: string[] = [];
-			const matchClass = new RegExp('class=".*"');
-			const classMatch = str.match(matchClass)
-			if (classMatch) {
-				classNames = classMatch[0].match(/\w+/g).slice(1)
-			}
-
-			// get the tag
-			const matchTag = new RegExp('<s*.*?(?=/| )');
-			const untilAndIncludingTag = str.match(matchTag)[0];
-			const tag = untilAndIncludingTag.slice(
-				untilAndIncludingTag.includes(' ') ? untilAndIncludingTag.lastIndexOf(' ') + 1 : 1
-			);
-
-			// get the text
-			const matchText = new RegExp('>.*<');
-			const text = str.match(matchText) ? str.match(matchText)[0].slice(1, -1) : '';
-
-			arr.push({
-				text,
-				classNames,
-				tag
-			});
-
-			str = '';
-		}
-
-		return arr;
+	
+			return [logStrings.join(''), ...styles];
 	}
 
-	private getObjFromCSS(cssText: string): object {
-		const styles = cssText.split('}');
-
-		const stylesObj = {};
-		for (const style of styles) {
-			let [selectorsStr, rules] = style.split('{');
-
-			// get comma separated selectors
-			const selectors: string[] = selectorsStr.split(',').map((selector) => selector.trim());
-
-			for (const selector of selectors) {
-				if (!stylesObj[selector]) stylesObj[selector] = rules;
-				else stylesObj[selector] += rules;
-			}
-		}
-
-		return stylesObj;
+	log(): void {
+		console.log(...this.getLog());
 	}
 }
 
