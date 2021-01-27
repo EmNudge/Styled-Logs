@@ -39,7 +39,7 @@ class StyledLog {
 			
 			if (block.type === 'SELF_CLOSING_TAG') {
 				const alias = this.aliases[name];
-				const str = typeof alias === 'function' ? alias(attributes) : attributes;
+				const str = typeof alias === 'function' ? alias(attributes) : alias;
 				logStrings.push(`%c${str}%c`);
 				continue;
 			}
